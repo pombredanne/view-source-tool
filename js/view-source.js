@@ -59,7 +59,7 @@ function drillDown(path, animate, callback){
   if(path.endsWith('/')){
     $s.html(generateFileList(path))
   } else {
-    $s.html('loading file&hellip;')
+    $s.html('<p class="loading">Loading preview&hellip;</p>')
   }
   $s.on('click', 'a', function(e){
     e.preventDefault()

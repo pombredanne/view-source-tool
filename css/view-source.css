@@ -116,3 +116,11 @@ section a.csv {
 section a.xls, section a.xlsx {
   background-image: url(../img/icon-excel.png);
 }
+
+section p.loading {
+  color: #888;
+  background: transparent url(../img/loader-999-fff.gif) 8px 7px no-repeat;
+  padding: 7px 10px 7px 30px;
+  line-height: 16px;
+  font-size: 16px;
+}
