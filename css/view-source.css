@@ -42,6 +42,7 @@ section a, section.background a, section.background a:hover {
   padding: 7px 10px 7px 30px;
   line-height: 16px;
   font-size: 16px;
+  outline: none;
 }
 
 section a:hover, section a.selected {
