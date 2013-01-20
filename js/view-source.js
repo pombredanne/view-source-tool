@@ -5,7 +5,7 @@ function sift(object){
   });
 }
 
-function drillDown(path, animate){
+function drillDown(path, animate, callback){
   var duration = (animate == false) ? 0 : 300
   var depth = sift(path.split('/')).length
   var $s = $('<section>').css({
@@ -62,16 +62,21 @@ function drillDown(path, animate){
   $s.on('click', function(){
     var sectionsAboveThisOne = $(this).nextAll('section')
     backUp(sectionsAboveThisOne)
+  }).on('mouseenter', function(){
+    $(this).find('a.selected').removeClass('selected')
   })
   $s.appendTo('body').animate({
     left: depth * 80
-  }, duration).prevAll('section').addClass('background')
+  }, duration, function(){
+    if(typeof(callback) != 'undefined'){
+      callback()
+    }
+  }).prevAll('section').addClass('background')
   $('a[href="' + path + '"]').addClass('active')
 }
 
 function backUp(sections){
   var $sections = sections || $('section').last()
-  console.log($sections.length, $sections)
   if($sections.length < $('section').length){
     $sections.first().prev('section').removeClass('background')
     $sections.each(function(){
@@ -87,7 +92,57 @@ function backUp(sections){
   }
 }
 
+function fileDown(){
+  var $section = $('section').last()
+  var $selected = $('a.selected', $section)
+  if($selected.length){
+    if(!$selected.parent().is(':last-child')){
+      $selected.removeClass('selected').parent().next().children('a').addClass('selected')
+    }
+  } else {
+    $section.find('a').first().addClass('selected')
+  }
+}
+
+function fileUp(){
+  var $section = $('section').last()
+  var $selected = $('a.selected', $section)
+  if($selected.length){
+    if(!$selected.parent().is(':first-child')){
+      $selected.removeClass('selected').parent().prev().children('a').addClass('selected')
+    }
+  } else {
+    $section.find('a').last().addClass('selected')
+  }
+}
+
+function fileEnter(){
+  var $selected = $('section').last().find('a.selected')
+  if($selected.length){
+    drillDown($selected.attr('href'), true, function(){
+      $('section').last().find('a').first().addClass('selected')
+    })
+  } else {
+    fileDown()
+  }
+}
+
 $(function(){
+
   drillDown('/', false)
   drillDown('/home/')
+
+  $(document).keydown(function(e){
+    if((e.which == 27 || e.which == 37) && $('section').length > 1){
+      $('section.background').last().find('a.active').addClass('selected')
+      backUp()
+    } else if(e.which == 38){
+      fileUp()
+    } else if(e.which == 39){
+      fileEnter()
+    } else if(e.which == 40){
+      fileDown()
+    }
+  })
+
 })

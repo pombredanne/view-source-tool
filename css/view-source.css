@@ -44,7 +44,7 @@ section a, section.background a, section.background a:hover {
   font-size: 16px;
 }
 
-section a:hover {
+section a:hover, section a.selected {
   color: #000;
   background-color: #D7EBFF;
   text-decoration: none;
