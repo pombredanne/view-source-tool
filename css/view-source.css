@@ -35,22 +35,64 @@ section ul {
 
 section a, section.background a, section.background a:hover {
   color: #000;
-  background: transparent;
+  background-color: transparent;
+  background-position: 8px 7px;
+  background-repeat: no-repeat;
   display: block;
-  padding: 5px 10px;
+  padding: 7px 10px 7px 30px;
+  line-height: 16px;
+  font-size: 16px;
 }
 
 section a:hover {
   color: #000;
-  background: #D7EBFF;
+  background-color: #D7EBFF;
   text-decoration: none;
 }
 
 section a.active, section.background a.active {
   color: #fff;
-  background: dodgerBlue;
+  background-color: dodgerBlue;
+  opacity: 1;
 }
 
 section.background a {
   cursor: default;
+  opacity: 0.7;
+}
+
+section a {
+  background-image: url(../img/icon-unknown.png);
+}
+
+section a.file {
+  background-image: url(../img/icon-file.png);
+}
+
+section a.directory {
+  background-image: url(../img/icon-directory.png);
+}
+
+section a.directory.active {
+  background-image: url(../img/icon-directory-open.png);
+}
+
+section a.html {
+  background-image: url(../img/icon-html.png);
+}
+
+section a.gif, section a.jpg, section a.jpeg, section a.png {
+  background-image: url(../img/icon-image.png);
+}
+
+section a.sqlite, section a.db {
+  background-image: url(../img/icon-database.png);
+}
+
+section a.csv {
+  background-image: url(../img/icon-csv.png);
+}
+
+section a.xls, section a.xlsx {
+  background-image: url(../img/icon-excel.png);
 }
