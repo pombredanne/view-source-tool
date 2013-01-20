@@ -61,9 +61,21 @@ function drillDown(path, animate){
   })
   $s.on('click', function(){
     var sectionsAboveThisOne = $(this).nextAll('section')
-    if(sectionsAboveThisOne.length){
-      $(this).removeClass('background')
-      sectionsAboveThisOne.css({
+    backUp(sectionsAboveThisOne)
+  })
+  $s.appendTo('body').animate({
+    left: depth * 80
+  }, duration).prevAll('section').addClass('background')
+  $('a[href="' + path + '"]').addClass('active')
+}
+
+function backUp(sections){
+  var $sections = sections || $('section').last()
+  console.log($sections.length, $sections)
+  if($sections.length < $('section').length){
+    $sections.first().prev('section').removeClass('background')
+    $sections.each(function(){
+      $(this).css({
         overflow: 'hidden'
       }).animate({
         left: $(window).width() + $(this).position().left
@@ -71,12 +83,8 @@ function drillDown(path, animate){
         $('a[href="' + $(this).attr('data-path') + '"]').removeClass('active')
         $(this).remove()
       })
-    }
-  })
-  $s.appendTo('body').animate({
-    left: depth * 50
-  }, duration).prevAll('section').addClass('background')
-  $('a[href="' + path + '"]').addClass('active')
+    })
+  }
 }
 
 $(function(){
