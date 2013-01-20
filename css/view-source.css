@@ -53,6 +53,7 @@ section a:hover, section a.selected {
 section a.active, section.background a.active {
   color: #fff;
   background-color: dodgerBlue;
+  text-shadow: 0 1px 0 #084F96;
   opacity: 1;
 }
 
