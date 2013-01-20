@@ -68,6 +68,7 @@ function drillDown(path, animate, callback){
   $s.appendTo('body').animate({
     left: depth * 80
   }, duration, function(){
+    $(this).css('overflow', 'auto')
     if(typeof(callback) != 'undefined'){
       callback()
     }
