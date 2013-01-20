@@ -149,7 +149,7 @@ $(function(){
       backUp()
     } else if(e.which == 38){
       fileUp()
-    } else if(e.which == 39){
+    } else if(e.which == 39 || e.which == 13 || e.which == 32){
       fileEnter()
     } else if(e.which == 40){
       fileDown()
