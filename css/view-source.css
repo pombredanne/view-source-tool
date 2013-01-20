@@ -1,0 +1,56 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  position: relative;
+}
+
+section {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  -webkit-box-shadow: 0 0 100px rgba(0,0,0,0.8);
+  -moz-box-shadow: 0 0 100px rgba(0,0,0,0.8);
+  box-shadow: 0 0 100px rgba(0,0,0,0.8);
+  background: #fff;
+  white-space: no-wrap;
+  -webkit-transition: background 400ms ease-in;
+  -moz-transition: background 400ms ease-in;
+  -ms-transition: background 400ms ease-in;
+  -o-transition: background 400ms ease-in;
+  transition: background 400ms ease-in;
+}
+
+section.background {
+  background: #eee;
+}
+
+section ul {
+  margin: 0;
+  list-style: none;
+}
+
+section a, section.background a, section.background a:hover {
+  color: #000;
+  background: transparent;
+  display: block;
+  padding: 5px 10px;
+}
+
+section a:hover {
+  color: #000;
+  background: #D7EBFF;
+  text-decoration: none;
+}
+
+section a.active, section.background a.active {
+  color: #fff;
+  background: dodgerBlue;
+}
+
+section.background a {
+  cursor: default;
+}
