@@ -81,6 +81,26 @@ section a.html {
   background-image: url(../img/icon-html.png);
 }
 
+section a.css {
+  background-image: url(../img/icon-css.png);
+}
+
+section a.js {
+  background-image: url(../img/icon-js.png);
+}
+
+section a.json {
+  background-image: url(../img/icon-json.png);
+}
+
+section a.py, section a.pyc {
+  background-image: url(../img/icon-python.png);
+}
+
+section a.script {
+  background-image: url(../img/icon-script.png);
+}
+
 section a.gif, section a.jpg, section a.jpeg, section a.png {
   background-image: url(../img/icon-image.png);
 }
