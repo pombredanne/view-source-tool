@@ -9,43 +9,64 @@ String.prototype.endsWith = function(suffix) {
     return this.indexOf(suffix, this.length - suffix.length) !== -1;
 }
 
-function generateFileList(path){
-  var ul = '<ul>'
-  if(path == '/'){
-    ul += '<li><a class="directory">bin</a></li>'
-    ul += '<li><a class="directory">dev</a></li>'
-    ul += '<li><a class="directory">etc</a></li>'
-    ul += '<li><a href="' + path + 'home/" class="directory">home</a></li>'
-    ul += '<li><a class="directory">lib</a></li>'
-    ul += '<li><a class="directory">root</a></li>'
-    ul += '<li><a class="directory">tmp</a></li>'
-    ul += '<li><a class="directory">usr</a></li>'
-    ul += '<li><a class="directory">var</a></li>'
-  } else if(path == '/home/'){
-    ul += '<li><a href="' + path + '.secret" class="file hidden">.secret</a></li>'
-    ul += '<li><a href="' + path + 'http/" class="directory">http</a></li>'
-    ul += '<li><a href="' + path + 'scraperwiki.json" class="file json">scraperwiki.json</a></li>'
-    ul += '<li><a href="' + path + 'scraperwiki.sqlite" class="file sqlite">scraperwiki.sqlite</a></li>'
-    ul += '<li><a href="' + path + 'scraper.py" class="file py">scraper.py</a></li>'
-    ul += '<li><a href="' + path + 'setup" class="file">setup</a></li>'
-  } else if(path == '/home/http/'){
-    ul += '<li><a href="' + path + 'css/" class="directory">css</a></li>'
-    ul += '<li><a href="' + path + 'img/" class="directory">img</a></li>'
-    ul += '<li><a href="' + path + 'index.html" class="file html">index.html</a></li>'
-    ul += '<li><a href="' + path + 'js/" class="directory">js</a></li>'
-  } else if(path == '/home/http/css/'){
-    ul += '<li><a href="' + path + 'screen.css" class="file css">screen.css</a></li>'
-  } else if(path == '/home/http/img/'){
-    ul += '<li><a href="' + path + 'loader.gif" class="file gif">loader.gif</a></li>'
-    ul += '<li><a href="' + path + 'bakground.png" class="file png">background.png</a></li>'
-  } else if(path == '/home/http/js/'){
-    ul += '<li><a href="' + path + 'script.js" class="file js">script.js</a></li>'
-  }
-  ul += '</ul>'
-  return ul
+function targetExec(cmd) {
+  var settings = readSettings()
+  return $.ajax({
+    url: settings.target.url.replace(new RegExp('[^/]+$'), 'exec'),
+    type: "POST",
+    data: {
+      apikey: settings.source.apikey,
+      cmd: cmd
+    }
+  })
 }
 
-function drillDown(path, animate, callback){
+function readSettings() {
+  if (window.location.hash === '') {
+    return null
+  }
+  var hash = window.location.hash.substr(1)
+  try {
+    return JSON.parse(decodeURIComponent(hash))
+  } catch (e) {
+    return null
+  }
+}
+
+function generateFileList(path, callback){
+  targetExec('ls -lhA ' + path).done(function(data){
+    var list = $.trim(data).split("\n").slice(1)
+    var output = '<ul>'
+    $.each(list, function(i, line){
+      var matches = line.match(/(\S)\S+\s+\S+\s+\S+\s+\S+\s+(\S+)\s+\S+\s+\S+\s+\S+\s+(.+)/) // Mofo Regex
+      var t = matches[1]
+      var size = matches[2]
+      var name = matches[3]
+      var url = path + name
+      if(t == '-'){
+        var type = 'file'
+      } else if(t == 'd'){
+        var type = 'directory'
+        url += '/'
+      } else if(t == 'l'){
+        var type = 'symlink'
+        name = name.split(' -> ')[0]
+        url = path + name // do we add a '/' as well? is the link target a directory??
+      }
+      if(name[0] == '.'){
+        type += ' hidden'
+      }
+      output += '<li><a href="' + url + '" class="' + type + '">' + name + '</a></li>'
+    })
+    output += '</ul>'
+    callback(output)
+  }).error(function(x,y,z){
+    console.log(x,y,z)
+    callback('<p class="error">Error</p>')
+  })
+}
+
+function drillDown(path, animate, animationCallback, ajaxCallback){
   var duration = (animate == false) ? 0 : 300
   var depth = path.split('/').sift().length
   var $s = $('<section>').css({
@@ -56,34 +77,40 @@ function drillDown(path, animate, callback){
     'data-path': path,
     'data-depth': depth
   })
-  if(path.endsWith('/')){
-    $s.html(generateFileList(path))
-  } else {
-    $s.html('<p class="loading">Loading preview&hellip;</p>')
-  }
-  $s.on('click', 'a', function(e){
-    e.preventDefault()
-    var sectionsAboveThisOne = $(this).parents('section').nextAll('section')
-    if(sectionsAboveThisOne.length == 0){
-      e.stopPropagation()
-      drillDown($(this).attr('href'))
-    }
-  })
-  $s.on('click', function(){
-    var sectionsAboveThisOne = $(this).nextAll('section')
-    backUp(sectionsAboveThisOne)
-  }).on('mouseenter', function(){
-    $(this).find('a.selected').removeClass('selected')
-  })
   $s.appendTo('body').animate({
     left: depth * 80
   }, duration, function(){
     $(this).css('overflow', 'auto')
-    if(typeof(callback) != 'undefined'){
-      callback()
+    if(typeof(animationCallback) == 'function'){
+      animationCallback()
     }
   }).prevAll('section').addClass('background')
   $('a[href="' + path + '"]').addClass('active')
+  if(path.endsWith('/')){
+    $s.html('<p class="loading">Loading directory&hellip;</p>')
+    generateFileList(path, function(fileList){
+      $s.html(fileList)
+      $s.on('click', 'a', function(e){
+        e.preventDefault()
+        var sectionsAboveThisOne = $(this).parents('section').nextAll('section')
+        if(sectionsAboveThisOne.length == 0){
+          e.stopPropagation()
+          drillDown($(this).attr('href'))
+        }
+      })
+      $s.on('click', function(){
+        var sectionsAboveThisOne = $(this).nextAll('section')
+        backUp(sectionsAboveThisOne)
+      }).on('mouseenter', function(){
+        $(this).find('a.selected').removeClass('selected')
+      })
+      if(typeof(ajaxCallback) == 'function'){
+        ajaxCallback()
+      }
+    })
+  } else {
+    $s.html('<p class="loading">Loading preview&hellip;</p>')
+  }
 }
 
 function backUp(sections){
@@ -140,14 +167,10 @@ function fileEnter(){
 
 $(function(){
 
-  exec('ls').done(function(data){
-    console.log('success', data)
-  }).error(function(x,y,z){
-    console.log('error', x.responseText, y, z)
+  drillDown('/', false, null, function(){
+    $('a[href="/home/"]').addClass('active')
+    drillDown('/home/', true)
   })
-
-  drillDown('/', false)
-  drillDown('/home/')
 
   $(document).keydown(function(e){
     if((e.which == 27 || e.which == 37) && $('section').length > 1){
