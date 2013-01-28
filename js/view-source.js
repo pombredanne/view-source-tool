@@ -140,6 +140,12 @@ function fileEnter(){
 
 $(function(){
 
+  exec('ls').done(function(data){
+    console.log('success', data)
+  }).error(function(x,y,z){
+    console.log('error', x.responseText, y, z)
+  })
+
   drillDown('/', false)
   drillDown('/home/')
 
