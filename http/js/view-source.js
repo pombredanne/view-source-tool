@@ -34,7 +34,7 @@ function readSettings() {
 }
 
 function generateFileList(path, callback){
-  targetExec('ls -lhAo ' + path).done(function(data){
+  targetExec('ls -ohA ' + path).done(function(data){
     var list = $.trim(data).split("\n").slice(1)
     var output = '<ul>'
     $.each(list, function(i, line){
