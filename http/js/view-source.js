@@ -38,10 +38,9 @@ function generateFileList(path, callback){
     var list = $.trim(data).split("\n").slice(1)
     var output = '<ul>'
     $.each(list, function(i, line){
-      var matches = line.match(/(\S)\S+\s+\S+\s+\S+\s+\S+\s+(\S+)\s+\S+\s+\S+\s+\S+\s+(.+)/) // Mofo Regex
+      var matches = line.match(/(\S)\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+(.+)/) // Mofo Regex
       var t = matches[1]
-      var size = matches[2]
-      var name = matches[3]
+      var name = matches[2]
       var url = path + name
       if(t == '-'){
         var type = 'file'
