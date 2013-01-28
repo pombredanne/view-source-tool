@@ -34,11 +34,11 @@ function readSettings() {
 }
 
 function generateFileList(path, callback){
-  targetExec('ls -lhA ' + path).done(function(data){
+  targetExec('ls -lhAo ' + path).done(function(data){
     var list = $.trim(data).split("\n").slice(1)
     var output = '<ul>'
     $.each(list, function(i, line){
-      var matches = line.match(/(\S)\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+(.+)/) // Mofo Regex
+      var matches = line.match(/(\S)\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+\S+\s+(.+)/) // Mofo Regex
       var t = matches[1]
       var name = matches[2]
       var url = path + name
