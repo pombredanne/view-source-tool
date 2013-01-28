@@ -45,10 +45,18 @@ section a, section.background a, section.background a:hover {
   outline: none;
 }
 
+section a.hidden {
+  color: #999;
+}
+
 section a:hover, section a.selected {
   color: #000;
   background-color: #D7EBFF;
   text-decoration: none;
+}
+
+section a.hidden:hover, section a.hidden.selected {
+  color: #666;
 }
 
 section a.active, section.background a.active {
@@ -79,43 +87,43 @@ section a.directory.active {
   background-image: url(../img/icon-directory-open.png);
 }
 
-section a.html {
+section a[href$=".html"] {
   background-image: url(../img/icon-html.png);
 }
 
-section a.css {
+section a[href$=".css"] {
   background-image: url(../img/icon-css.png);
 }
 
-section a.js {
+section a[href$=".js"] {
   background-image: url(../img/icon-js.png);
 }
 
-section a.json {
+section a[href$=".json"] {
   background-image: url(../img/icon-json.png);
 }
 
-section a.py, section a.pyc {
+section a[href$=".py"], section a[href$=".pyc"] {
   background-image: url(../img/icon-python.png);
 }
 
-section a.script {
+section a[href$=".script"] {
   background-image: url(../img/icon-script.png);
 }
 
-section a.gif, section a.jpg, section a.jpeg, section a.png {
+section a[href$=".gif"], section a[href$=".jpg"], section a[href$=".jpeg"], section a[href$=".png"] {
   background-image: url(../img/icon-image.png);
 }
 
-section a.sqlite, section a.db {
+section a[href$=".sqlite"], section a[href$=".db"] {
   background-image: url(../img/icon-database.png);
 }
 
-section a.csv {
+section a[href$=".csv"] {
   background-image: url(../img/icon-csv.png);
 }
 
-section a.xls, section a.xlsx {
+section a[href$=".xls"], section a[href$=".xlsx"] {
   background-image: url(../img/icon-excel.png);
 }
 
