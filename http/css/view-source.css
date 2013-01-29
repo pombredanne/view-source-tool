@@ -45,7 +45,7 @@ section a, section.background a, section.background a:hover {
   outline: none;
 }
 
-section a.hidden {
+section a.hidden, section.background a.hidden:hover {
   color: #999;
 }
 
