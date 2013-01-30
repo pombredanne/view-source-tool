@@ -134,3 +134,13 @@ section p.loading {
   line-height: 16px;
   font-size: 16px;
 }
+
+section.pre {
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+  font-size: 14px;
+  white-space: -moz-pre-wrap; /* Firefox */
+  white-space: -pre-wrap; /* ancient Opera */
+  white-space: -o-pre-wrap; /* newer Opera */
+  white-space: pre-wrap; /* Chrome; W3C standard */
+  word-wrap: break-word; /* IE */
+}

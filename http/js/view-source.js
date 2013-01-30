@@ -5,8 +5,17 @@ Array.prototype.sift = function(){
   })
 }
 
-String.prototype.endsWith = function(suffix) {
-    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+String.prototype.endsWith = function(suffixes) {
+  // suffixes can be a string, or a list of strings, to match
+  if(typeof(suffixes) == 'string'){
+    var suffixes = [suffixes]
+  }
+  for(var i=0;i<suffixes.length;i++){
+    if(this.indexOf(suffixes[i], this.length - suffixes[i].length) !== -1){
+      return true
+    }
+  }
+  return false
 }
 
 function targetExec(cmd) {
@@ -34,7 +43,7 @@ function readSettings() {
 }
 
 function generateFileList(path, callback){
-  targetExec('ls -ohA ' + path).done(function(data){
+  targetExec('ls -ohAL ' + path).done(function(data){
     var list = $.trim(data).split("\n").slice(1)
     var output = '<ul>'
     $.each(list, function(i, line){
@@ -107,8 +116,16 @@ function drillDown(path, animate, animationCallback, ajaxCallback){
         ajaxCallback()
       }
     })
-  } else {
+  } else if(path.endsWith(['.txt','.js','.py','.sh','.coffee','.json','.html','.css','.log','.md'])) {
     $s.html('<p class="loading">Loading preview&hellip;</p>')
+    targetExec('cat ' + path).done(function(data){
+      $s.addClass('pre').text(data)
+    }).error(function(x,y,z){
+      console.log(x,y,z)
+      callback('<p class="error">Error</p>')
+    })
+  } else {
+    $s.html('<p>Hmmm&hellip;</p>')
   }
 }
 
